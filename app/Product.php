@@ -1,0 +1,32 @@
+<?php
+
+namespace App;
+
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
+class Product extends Model
+{
+    protected $fillable = [
+        'model','special_price','price','image','category_id','created_at','updated_at'
+    ];
+
+    //查询同一产品的多语言信息
+    public function product_description()
+    {
+       return $this->hasMany('App\Product_description','product_model','model');
+    }
+
+    //筛选出英文的产品信息
+    public function language_description_1()
+    {
+        return $this->product_description()->where('language_id',1);
+    }
+
+    public function category_name()
+    {
+        return $this->hasOne('App\Category','id','category_id');
+    }
+
+}
