@@ -15,6 +15,28 @@
                     <form method="post" action="/products/{{$product->model}}/{{$lanProduct->language_id}}/update" class="form-horizontal">
                        {{csrf_field()}}
                         <div class="form-group">
+                            <label class="col-sm-2 control-label">产品是否可用</label>
+                            @if($product->is_usable == 0)
+                                <div class="col-sm-8">
+                            <label class="radio-inline ">
+                                <input type="radio" name="is_usable" id="is_usable1" value="1">可用
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="is_usable" id="is_usable2" value="0" checked>下架
+                            </label>
+                                </div>
+                            @else
+                                <div class="col-sm-8">
+                                <label class="radio-inline">
+                                    <input type="radio" name="is_usable" id="is_usable1" value="1" checked>可用
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="is_usable" id="is_usable2" value="0" >下架
+                                </label>
+                                </div>
+                                @endif
+                        </div>
+                        <div class="form-group">
                             <label for="name" class="col-sm-2 control-label">产品名称:</label>
                             <div class="col-sm-8">
                                 <input type="text" name="product_name" class="form-control" id="name" value="{{$lanProduct->product_name}}">
@@ -42,6 +64,14 @@
                             <label for="special_price" class="col-sm-2 control-label">产品现价:</label>
                             <div class="col-sm-8">
                                 <input type="text" name="special_price" class="form-control" id="special_price" value="{{$product->special_price}}">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="image" class="col-sm-2 control-label">产品主图:</label>
+                            <div class="col-sm-8">
+                                <div style="border: 1px solid grey;float: left">
+                                    <img src="/storage/{{$product->image}}" alt="" width="300">
+                                </div>
                             </div>
                         </div>
                         <div class="form-group">

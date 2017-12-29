@@ -16,6 +16,9 @@
 <body>
 
 <div class="container">
+    <br>
+    <br>
+    <h1 style="color: red;text-align: center">进入后台时，请先自行备份数据库</h1>
     <div class="row">
         <div style="text-align: center;margin: 200px;">
         <a href="/products/brand" class="btn btn-primary">

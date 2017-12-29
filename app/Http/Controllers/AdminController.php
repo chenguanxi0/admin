@@ -11,8 +11,5 @@ class AdminController extends Controller
         return view('index');
     }
 
-    public function tool()
-    {
-         return view('tool');
-    }
+
 }

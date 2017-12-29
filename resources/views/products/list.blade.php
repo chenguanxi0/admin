@@ -11,22 +11,25 @@
                 <form action="/excel/import" method='post' enctype="multipart/form-data">
                     {{ csrf_field() }}
                     <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-
-
                             <button type="submit" class="btn btn-primary" style="float: right;">
                                 <i class="fa fa-btn fa-sign-in"></i> 确认上传
                             </button>
-
-
                         <div class="col-md-2" style="float: right;">
                             <input id="fileId1" type="file" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" name="file"/>
                         </div>
-
                     </div>
-
-
                 </form>
+                <form action="/products/list" method="post">
+                    <select name="language_id" id="language_id" onchange="getvalue(this)">
+                            <option value="all">所有语言</option>
+                        @foreach($languages as $language)
+                            <option value="{{$language->id}}">{{$language->code}}</option>
+                        @endforeach
+                    </select>
+                    <select  name="category_id" id="category_id">
 
+                    </select>
+                </form>
                 <br class="clearBoth">
             </div>
 
@@ -37,6 +40,7 @@
                     <table class="table table-hover">
                         <thead>
                         <tr>
+                            <th>状态</th>
                             <th>产品名称</th>
                             <th>model</th>
                             <th>原价(美元)</th>
@@ -52,12 +56,19 @@
                         @foreach($products as $product)
 
                             <tr>
-                                <td>{{$product->language_description_1[0]->product_name}}</td>
+                                <td>
+                                    @if($product->is_usable == 0)
+                                    <span class="btn btn-danger">已下架</span>
+                                    @else
+                                        <span class="btn btn-primary">可用</span>
+                                    @endif
+                                </td>
+{{--                                <td>{{$product->language_description_1()[0]->product_name}}</td>--}}
                                 <td>{{$product->model}}</td>
                                 <td>{{$product->price}}</td>
                                 <td>{{$product->special_price}}</td>
-                                <td>{{$product->image}}</td>
-                                <td>{{$product->category_name->name}}</td>
+                                <td><img src="/storage/{{$product->image}}" alt="" width="50"></td>
+                                <td id="{{$product->category_id}}">{{$product->category_name->name}}</td>
                                 <td>
 
                                     @foreach($product->product_description as $language_id)
@@ -96,5 +107,35 @@
             swal('','成功删除产品!','success')
         </script>
     @endif
+    @if(session('cateIsNull'))
+        <script>
+            swal('分类不存在','请检查表中分类','error')
+        </script>
+    @endif
 
+    <script>
+        $.ajaxSetup({
+            headers: { 'X-CSRF-TOKEN' : '{{ csrf_token() }}' }
+        });
+        function getvalue(){
+            if($('#language_id').val() == 'all'){
+                window.location.reload();
+            }
+                $.ajax({
+                    type: "POST",
+                    url: "/products/ajax/language",
+                    data: {language_id:$('#language_id').val()},
+                    dataType: "json",
+                    success: function(data){
+                        var string = '';
+                        $.each( data, function(index, content)
+                        {
+                            string += '<option value='+content.category_id+'>'+content.name+'</option>';
+                            $('#category_id').html(string);
+//                            console.log( "the man's no. is: " + index + ",and " + content.name + " is learning " + content.category_id );
+                        });
+                    }
+                });
+        }
+    </script>
 @endsection

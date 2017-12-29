@@ -19,9 +19,9 @@ class Product extends Model
     }
 
     //筛选出英文的产品信息
-    public function language_description_1()
+    public function language_description_1($language_id)
     {
-        return $this->product_description()->where('language_id',1);
+        return $this->product_description()->where('language_id',$language_id);
     }
 
     public function category_name()

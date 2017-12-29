@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="/css/sb-admin-2.css">
     <link rel="stylesheet" href="/css/font-awesome.css">
     <link rel="stylesheet" href="/css/app.css">
+    <link rel="stylesheet" href="/css/style.css">
 
 </head>
 

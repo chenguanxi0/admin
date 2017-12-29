@@ -15,4 +15,9 @@ class Category extends Model
     {
         return $this->childCategory()->with('allChildrenCategorys');
     }
+
+    public function category_descriptions()
+    {
+        return $this->hasMany('App\Category_description','category_id','id');
+    }
 }

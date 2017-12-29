@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Category_description;
+use App\Entity\Category;
 use App\Product;
 use App\Product_description;
 use Illuminate\Http\Request;
+use App\Language;
 
 
 class ProductController extends Controller
@@ -15,10 +18,27 @@ class ProductController extends Controller
         return view('products/brand');
     }
     //产品列表
-    public function productsList()
+    public function productsList(Request $request)
     {
-        $products = Product::query()->paginate(10);
-        return view('products/list',compact('products'));
+
+        $is_usable = $request->is_usable;
+
+        if (!$is_usable){
+            $products = Product::query()->orderBy('is_usable','desc')->paginate(10);
+        }else{
+            $products = Product::query()->where('is_usable',$is_usable)->paginate(10);
+        }
+        $languages = Language::all();
+        return view('products/list',compact('products','languages'));
+    }
+    public function listRes(Request $request)
+    {
+        dd($request->all());
+    }
+    public function ajaxRes(Request $request)
+    {
+        $cds = Category_description::where('language_id',$request->language_id)->get();
+        return response()->json($cds);
     }
     //产品详情
     public function detail($model,$language_id)
@@ -64,6 +84,7 @@ class ProductController extends Controller
         //product表
         $data_1['special_price'] = $request->special_price;
         $data_1['price'] = $request->price;
+        $data_1['is_usable'] = $request->is_usable;
         $product = new Product;
 
         $data_2['product_name'] = $request->product_name;
