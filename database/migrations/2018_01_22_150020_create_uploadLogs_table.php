@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCategoryDescriptionsTable extends Migration
+class CreateUploadLogsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateCategoryDescriptionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('category_descriptions', function (Blueprint $table) {
+        Schema::create('upload_logs', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('category_id');
             $table->integer('language_id');
-            $table->string('name');
+            $table->integer('brand_id');
+            $table->string('fileName');
             $table->timestamps();
         });
     }

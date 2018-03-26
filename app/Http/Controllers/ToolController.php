@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\MyClass\timeDeal;
 use App\Brand;
 use App\Category;
-use App\Category_description;
+use App\Product;
+use App\Product_description;
 use App\Commit;
-use App\Product_commit;
+use App\Language;
+use App\UploadLog;
 use App\Web;
+use Chumper\Zipper\Facades\Zipper;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Config;
 use App\classic\DbManage;
@@ -19,6 +23,16 @@ class ToolController extends Controller
     public function index()
     {
        return view('tool/index');
+    }
+    public function uploadList()
+    {
+       $uploadLogs = UploadLog::all();
+       return view('tool/uploadList',compact('uploadLogs'));
+    }
+    public function logDelete(UploadLog $uploadLog)
+    {
+        $uploadLog->delete();
+        return back()->with('delete',1);
     }
     public function uploadImages(Request $request)
     {
@@ -63,33 +77,61 @@ class ToolController extends Controller
     }
     public function commit(Request $request)
     {
-        //先判断是否有此产品的评论
-        $p = Commit::where('model',$request->model)->get();
-        $web = Web::where('url',$request->url)->get()->toArray();
-        $language_id = $web ? $web[0]['language_id'] : 1 ;
-        if ($p->first()){
-            //存在该产品的评论，直接掉评论
-                $commits=Commit::query()
-                    ->where('model',$request->model)
-                    ->where('language_id',$language_id)
-                    ->take(6)
-                    ->orderBy('created_at','desc')
-                    ->get()
-                    ->toArray();
 
-        }else{
-            //不存在就直接调用通用评论
-            $commits=Commit::query()
-                ->where('is_common',1)
+        //1.首先查询网站的语言
+        $web = Web::query()->where('url',str_replace('www.','',$request->url))->first();
+
+        //2.调用相应语言的model的评论
+        if ($web){
+
+            $language_id = $web->language_id;
+            $brand_id = $web->brand_id;
+
+            $num = Product::query()
+                ->where('model',$request->model)
+                ->first()->commitsNum;
+
+            $modelCommits = Commit::query()
+                ->where('model',$request->model)
                 ->where('language_id',$language_id)
-                ->take(6)
-                ->orderBy('created_at','desc')
-                ->get()
-                ->toArray();
-        }
-        return response()->json($commits);
-    }
+                ->orderBy('id','desc')->get()->take($num);
 
+            return response()->json($modelCommits);
+        }
+
+    }
+    public function updateBatch($tableName = "", $multipleData = array()){
+
+        if( $tableName && !empty($multipleData) ) {
+
+            // column or fields to update
+            $updateColumn = array_keys($multipleData[0]);
+            $referenceColumn = $updateColumn[0]; //e.g id
+            unset($updateColumn[0]);
+            $whereIn = "";
+
+            $q = "UPDATE ".$tableName." SET ";
+            foreach ( $updateColumn as $uColumn ) {
+                $q .=  $uColumn." = CASE ";
+
+                foreach( $multipleData as $data ) {
+                    $q .= "WHEN ".$referenceColumn." = ".$data[$referenceColumn]." THEN '".$data[$uColumn]."' ";
+                }
+                $q .= "ELSE ".$uColumn." END, ";
+            }
+            foreach( $multipleData as $data ) {
+                $whereIn .= "'".$data[$referenceColumn]."', ";
+            }
+            $q = rtrim($q, ", ")." WHERE ".$referenceColumn." IN (".  rtrim($whereIn, ', ').")";
+
+            // Update
+            return DB::update(DB::raw($q));
+
+        } else {
+            return false;
+        }
+
+    }
     public function backupsql()
     {
 
@@ -112,11 +154,34 @@ class ToolController extends Controller
         if ($request->method() == 'GET'){
             return view('tool/brandAdd');
         }
+        $this->validate($request,[
+            'name'=>'string|required|unique:brands'
+        ]);
         $brand = new Brand;
         $brand->name = $request->name;
         $brand->save();
         return redirect()->back()->with('success',1);
     }
+    public function languageAdd(Request $request)
+    {
+        if ($request->method() == 'GET'){
+            return view('tool/languageAdd');
+        }
+        $this->validate($request,[
+            'name'=>'string|required|unique:languages',
+            'code'=>'string|required|unique:languages',
+        ]);
+        $language = new Language;
+        $language->name = $request->name;
+        $language->code = $request->code;
+        $language->save();
+        return redirect()->back()->with('success',1);
+    }
 
-
+    public function zip()
+    {
+        $filename = str_replace('\\', '/', public_path()).'/storage/mk/2017032211095413531.jpg';
+        Zipper::make('storage/zip/test.zip')->add($filename)->close();
+        dd($filename);
+    }
 }

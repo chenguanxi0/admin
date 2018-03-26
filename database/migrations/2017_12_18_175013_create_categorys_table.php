@@ -17,7 +17,11 @@ class CreateCategorysTable extends Migration
             $table->increments('id');
             $table->integer('parent_id');
             $table->integer('brand_id');
+            $table->integer('language_id');
+            $table->string('name');
+            $table->string('compareName');
             $table->string('path');
+            $table->integer('class');
             $table->timestamps();
         });
     }

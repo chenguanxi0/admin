@@ -28,7 +28,7 @@
     </div>
     <div class="row">
         <div style="text-align: center">
-        <a href="/" class="btn btn-primary">
+        <a href="/commits" class="btn btn-primary">
             评论管理
         </a>
         </div>

@@ -10,7 +10,18 @@
             <div class="panel-body">
                 <form action="/tool/brand/add" method="post" class="form-horizontal">
                     {{csrf_field()}}
-
+                    <div class="form-group">
+                        <label for="hasLanguages" class="col-sm-2 control-label">已存在品牌:</label>
+                        <div class="col-sm-8">
+                            <select class="form-control" name="hasLanguages">
+                                <option value="0">--查看--</option>
+                                @foreach(\App\Brand::all() as $brand)
+                                    <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+                    <hr>
                     <div class="form-group">
                         <label for="name" class="col-sm-2 control-label">品牌名称:</label>
                         <div class="col-sm-8">

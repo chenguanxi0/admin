@@ -53,7 +53,8 @@ class DbManage {
         set_time_limit(0);//无时间限制
         @ob_end_flush();
         // 连接数据库
-        $this->db = @mysql_connect ( $this->host, $this->username, $this->password ) or die( '<p class="dbDebug"><span class="err">Mysql Connect Error : </span>'.mysql_error().'</p>');
+
+        $this->db = @mysqli_connect() ( $this->host, $this->username, $this->password ) or die( '<p class="dbDebug"><span class="err">Mysql Connect Error : </span>'.mysql_error().'</p>');
         // 选择使用哪个数据库
         mysql_select_db ( $this->database, $this->db ) or die('<p class="dbDebug"><span class="err">Mysql Connect Error:</span>'.mysql_error().'</p>');
         // 数据库编码方式

@@ -54,24 +54,4 @@ class CategoryController extends Controller
         $category->category_descriptions()->save($category_description);
          return redirect('categorys/add')->with('success',1);
     }
-    //为已存在的分类添加新语言
-    public function rename(Request $request)
-    {
-
-        $cd = Category_description::where('name',$request->name)->first();
-        if ($cd->language_id == $request->language_id){
-            return redirect()->back()->with('haveL',1);
-        }
-        $this->validate($request,[
-            'name'=>'unique:category_descriptions|required',
-//            'category_id'=>'integer|required',
-//            'language_id'=>'integer|required',
-        ]);
-        $category_description = new Category_description;
-        $category_description['name'] = $request->new_name;
-        $category_description['category_id'] = $cd->category_id;
-        $category_description['language_id'] = $request->language_id;
-        $category_description->save();
-        return redirect('categorys/add')->with('success',1);
-    }
 }

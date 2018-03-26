@@ -18,8 +18,10 @@ class CreateCommitsTable extends Migration
             $table->integer('model')->nullable();
             $table->integer('language_id')->default(1);
             $table->string('content');
+            $table->string('reply');
+            $table->timestamp('replyTime');
+            $table->text('img')->nullable();
             $table->string('username');
-            $table->boolean('is_common')->default(1);
             $table->boolean('is_admin')->default(1);
             $table->boolean('is_usable')->default(1);
             $table->integer('star')->default(5);

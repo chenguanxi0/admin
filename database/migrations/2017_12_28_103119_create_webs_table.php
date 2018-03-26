@@ -17,7 +17,10 @@ class CreateWebsTable extends Migration
             $table->increments('id');
             $table->string('url')->unique();
             $table->string('type');
+            $table->integer('hasSet')->default(0);
+            $table->float('priceChange')->default(1);
             $table->integer('language_id')->default(1);
+            $table->integer('brand_id')->default(1);
             $table->timestamps();
         });
     }

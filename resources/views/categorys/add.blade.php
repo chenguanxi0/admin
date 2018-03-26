@@ -8,7 +8,7 @@
             </div>
             @include('common.errors')
             <div class="panel-body">
-                <h2 style="text-align: center">添加全新分类</h2>
+                <h2 style="text-align: center">添加分类</h2>
                 <form action="/categorys/add" method="post" class="form-horizontal">
                     {{csrf_field()}}
                     <div class="form-group">
@@ -34,6 +34,7 @@
                             <input type="text" name="parent_catrgory" class="form-control" id="parent_catrgory">(区分大小写 || 一级分类则不填)
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label for="brand_id" class="col-sm-2 control-label">品牌:</label>
                         <div class="col-sm-8">
@@ -51,40 +52,8 @@
                 </form>
 
             </div>
-            <hr>
-            <div class="panel-body">
-                <h2 style="text-align: center">为已有分类添加其他语言</h2>
-                <form action="/categorys/rename" method="post" class="form-horizontal">
-                    {{csrf_field()}}
 
-                    <div class="form-group">
-                        <label for="name" class="col-sm-2 control-label">原分类名称:</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="name" class="form-control" id="name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="new_name" class="col-sm-2 control-label">新分类名称:</label>
-                        <div class="col-sm-8">
-                            <input type="text" name="new_name" class="form-control" id="new_name">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="langugae_id" class="col-sm-2 control-label">新分类语言:</label>
-                        <div class="col-sm-8">
-                            <select class="form-control" name="language_id">
-                                @foreach($languages as $language)
-                                    <option value="{{$language->id}}">{{$language->code}}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group" style="text-align: center">
-                        <button type="submit" class="btn btn-success">添加</button>
-                    </div>
-                </form>
 
-            </div>
         </div>
     </div>
 @stop

@@ -54,16 +54,150 @@ class ExcelController extends Controller
         });
 
 
+        //categorys表操作
+        foreach ($res as $k=>$v){
+            if ($v[5]){
+                // 1. 先判断该分类是否存在   --分类1
+                $name = Category::where('name',$v[5])->get();
+                if (!$name->first()){  //该name不存在,插入此条数据
+                    $category = new Category;
+                    $category->parent_id = 0;
+                    $category->name = $v[5];
+                    $category->brand_id = 1;
+                    $category->save();       //--分类1
 
+                    if ($v[6]){
+                        $category_2 = new Category;
+                        $name_2 = Category::where('name',$v[5])->get()->first()->name;
+                        $name_2 = Category::where('name',$name_2)->get();
+
+                        $category_2->parent_id = $name_2->first()->id;
+                        $category_2->name = $v[6];
+                        $category_2->brand_id = $name_2->first()->brand_id;
+                        $category_2->save();       //--分类2
+                        if ($v[7]){
+
+                            $category_3 = new Category;
+                            $name_3 = Category::where('name',$v[6])->get()->first()->name;
+                            $name_3 = Category::where('name',$name_3)->get();
+
+                            $category_3->parent_id = $name_3->first()->id;
+                            $category_3->name = $v[7];
+                            $category_3->brand_id = $name_3->first()->brand_id;
+                            $category_3->save();       //--分类3
+                            if ($v[8]){
+
+                                $category_4 = new Category;
+                                $name_4 = Category::where('name',$v[7])->get()->first()->name;
+                                $name_4 = Category::where('name',$name_4)->get();
+
+                                $category_4->parent_id = $name_4->first()->id;
+                                $category_4->name = $v[8];
+                                $category_4->brand_id = $name_4->first()->brand_id;
+                                $category_4->save();       //--分类4
+
+                            }
+                        }
+                    }
+
+
+
+                }else{
+                    // 2. 该分类已经存在 查找后面分类  --分类1
+
+                    if($v[6]){ //判断上传的表当中是否有2级分类
+
+                        // 先判读二级分类是否存在数据库中，如果不存在就创建2 3 4级分类
+                        $name = Category::where('name',$v[6])->get();
+                        if (!$name->first()){
+                            $category_2 = new Category;
+                            $name_2 = Category::where('name',$v[5])->get()->first()->name;
+                            $name_2 = Category::where('name',$name_2)->get();
+
+                            $category_2->parent_id = $name_2->first()->id;
+                            $category_2->name = $v[6];
+                            $category_2->brand_id = $name_2->first()->brand_id;
+                            $category_2->save();       //--分类2
+                            if ($v[7]){
+
+                                $category_3 = new Category;
+                                $name_3 = Category::where('name',$v[6])->get()->first()->name;
+                                $name_3 = Category::where('name',$name_3)->get();
+
+                                $category_3->parent_id = $name_3->first()->id;
+                                $category_3->name = $v[7];
+                                $category_3->brand_id = $name_3->first()->brand_id;
+                                $category_3->save();       //--分类3
+                                if ($v[8]){
+
+                                    $category_4 = new Category;
+                                    $name_4 = Category::where('name',$v[7])->get()->first()->name;
+                                    $name_4 = Category::where('name',$name_4)->get();
+
+                                    $category_4->parent_id = $name_4->first()->id;
+                                    $category_4->name = $v[8];
+                                    $category_4->brand_id = $name_4->first()->brand_id;
+                                    $category_4->save();       //--分类4
+
+                                }
+                            }
+                        }else{ //如果2级分类也存在
+                            //再判读三级分类是否存在，如果不存在就创建3 4级分类
+                            if($v[7]){
+                                $name = Category::where('name',$v[7])->get();
+                                if (!$name->first()){
+                                    $category_3 = new Category;
+                                    $name_3 = Category::where('name',$v[6])->get()->first()->name;
+                                    $name_3 = Category::where('name',$name_3)->get();
+
+                                    $category_3->parent_id = $name_3->first()->id;
+                                    $category_3->name = $v[7];
+                                    $category_3->brand_id = $name_3->first()->brand_id;
+                                    $category_3->save();       //--分类3
+                                    if ($v[8]){
+
+                                        $category_4 = new Category;
+                                        $name_4 = Category::where('name',$v[7])->get()->first()->name;
+                                        $name_4 = Category::where('name',$name_4)->get();
+
+                                        $category_4->parent_id = $name_4->first()->id;
+                                        $category_4->name = $v[8];
+                                        $category_4->brand_id = $name_4->first()->brand_id;
+                                        $category_4->save();       //--分类4
+
+                                    }
+                                }else{
+                                    //如果三级分类也存在在数据库中，判断四级分类
+                                    if($v[8]){
+                                        $name = Category::where('name',$v[8])->get();
+                                        if (!$name->first()){
+                                            $category_4 = new Category;
+                                            $name_4 = Category::where('name',$v[7])->get()->first()->name;
+                                            $name_4 = Category::where('name',$name_4)->get();
+
+                                            $category_4->parent_id = $name_4->first()->id;
+                                            $category_4->name = $v[8];
+                                            $category_4->brand_id = $name_4->first()->brand_id;
+                                            $category_4->save();       //--分类4
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
         //products表操作
         foreach ($res as $k=>$v){
-            $products[$k]['model'] = $v[1];
-            $products[$k]['special_price'] = $v[5];
-            $products[$k]['price'] = $v[4];
-            $products[$k]['image'] = $v[3];
+            $products[$k]['model'] = $v[0];
+            $products[$k]['special_price'] = $v[4];
+            $products[$k]['price'] = $v[3];
+            $products[$k]['image'] = $v[2];
 
             //判断当前分类  默认存在一级分类
-            $category_id = Category_description::where('name',$v[6])->first();
+            $category_id = Category_description::where('name',$v[5])->first();
 
             if(!$category_id){
                 return redirect()->back()->with('cateIsNull',1);
@@ -91,10 +225,11 @@ class ExcelController extends Controller
 
         //product_descriptions表操作
         foreach ($res as $k=>$v){
-                    $product_descriptions[$k]['product_model'] = $v[1];
-                    $product_descriptions[$k]['language_id'] = $v[0];
-                    $product_descriptions[$k]['product_name'] = $v[2];
-                    $product_descriptions[$k]['product_description'] = $v[7];
+                    $product_descriptions[$k]['product_model'] = $v[0];
+                    $product_descriptions[$k]['language_id'] = $request->improt_language_id;
+                    $product_descriptions[$k]['brand_id'] = $request->improt_language_id;
+                    $product_descriptions[$k]['product_name'] = $v[1];
+                    $product_descriptions[$k]['product_description'] = $v[6];
                     $product_descriptions[$k]['created_at'] = date('Y-m-d H:i:s', time());
                     $product_descriptions[$k]['updated_at'] = date('Y-m-d H:i:s', time());
 

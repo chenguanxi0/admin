@@ -16,11 +16,14 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->increments('id');
             $table->string('model')->unique();
-            $table->decimal('special_price', 15, 4);
-            $table->decimal('price', 15, 4);
+            $table->decimal('special_price', 15, 2);
+            $table->decimal('price', 15, 2)->nullable();
+            $table->decimal('costPrice', 15, 2)->nullable();
+            $table->decimal('freight', 15, 2)->nullable();
+            $table->float('priceChange')->default(1);
+            $table->integer('sureChange')->default(1);
             $table->string('image');
-            $table->integer('category_id');
-            $table->boolean('is_usable')->default(1);
+            $table->string('addImages');
             $table->timestamps();
         });
     }

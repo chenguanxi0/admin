@@ -36,10 +36,10 @@
                             <a data-toggle="collapse" href="#collapseMy2">所有产品<span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level panel-collapse collapse" id="collapseMy2">
                                 <li>
-                                    <a href="/products/list?is_usable=1">可用产品</a>
+                                    <a href="/products/brand">可用产品</a>
                                 </li>
                                 <li>
-                                    <a href="/products/list?is_usable=0">已下架评论</a>
+                                    <a href="/products/list?is_usable=0">已下架产品</a>
                                 </li>
                             </ul>
                         </li>
@@ -47,8 +47,11 @@
                             <a href="/products/store">创建产品</a>
                         </li>
                         <li>
-                            <a href="/tool/readme">上传说明</a>
+                            <a href="/products/import">上传产品</a>
                         </li>
+                        {{--<li>--}}
+                            {{--<a href="/tool/readme">上传说明</a>--}}
+                        {{--</li>--}}
 
                     </ul>
                     <!-- /.nav-second-level -->
@@ -61,43 +64,34 @@
                             <a data-toggle="collapse" href="#collapseMy">所有评价<span class="fa arrow"></span></a>
                             <ul class="nav nav-third-level panel-collapse collapse" id="collapseMy">
                                 <li>
-                                    <a href="/commits?is_usable=1">可用评论</a>
+                                    <a href="/commits">产品评论</a>
                                 </li>
                                 <li>
-                                    <a href="/commits?is_usable=0">不可用评论</a>
+                                    <a href="/commits/common">通用评论</a>
                                 </li>
 
                             </ul>
                         </li>
                         <li>
-                            <a href="/commits/add">添加评论</a>
+                            <a href="/commits/import">导入评论</a>
                         </li>
                         <li>
-                            <a href="/tool/readme">上传说明</a>
+                            <a href="/commits/addCommon">添加评论</a>
                         </li>
+
 
                     </ul>
 
                 </li>
                 <li>
-                    <a data-toggle="collapse" data-parent="#side-menu"
-                       href="#collapseSeven"><i class="fa fa-random fa-fw "></i> 分类管理<span class="fa arrow"></span></a>
-                    <ul class="nav nav-second-level panel-collapse collapse" id="collapseSeven">
-                        <li>
-                            <a href="/categorys">所有分类</a>
-                        </li>
-                        <li>
-                            <a href="/categorys/add">添加分类</a>
-                        </li>
-                    </ul>
-
+                    <a href="/tool/uploadList"><i class="fa fa-random fa-fw "></i> 上传记录</a>
                 </li>
                 <li>
                     <a data-toggle="collapse" data-parent="#side-menu"
                        href="#collapseFive"><i class="fa fa-file fa-fw "></i> 网站管理<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level panel-collapse collapse" id="collapseFive">
                         <li>
-                            <a href="/tool/category">所有网站</a>
+                            <a href="/webs/list">所有网站</a>
                         </li>
                         <li>
                             <a href="/webs/add">新建网站</a>
@@ -109,14 +103,24 @@
                     <a data-toggle="collapse" data-parent="#side-menu"
                        href="#collapseFour"><i class="fa fa-cog  fa-fw"></i> 工具<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level panel-collapse collapse" id="collapseFour">
-                        <li>
-                            <a href="/tool/category">分类</a>
-                        </li>
+
                         <li>
                             <a href="/tool/commit">评论</a>
                         </li>
                         <li>
                             <a href="/tool/brand/add">添加品牌</a>
+                        </li>
+                        <li>
+                            <a href="/tool/language/add">添加语言</a>
+                        </li>
+                        <li>
+                            <a href="/tool/download/product">下载产品格式表格</a>
+                        </li>
+                        <li>
+                            <a href="/tool/download/commit">下载产品评论格式表格</a>
+                        </li>
+                        <li>
+                            <a href="/tool/download/common">下载通用评论格式表格</a>
                         </li>
                         <li>
                             <a href="/tool/backupbtn">备份/恢复</a>

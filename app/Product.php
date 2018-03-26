@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 class Product extends Model
 {
     protected $fillable = [
-        'model','special_price','price','image','category_id','created_at','updated_at'
+        'model','special_price','price','costPrice','freight','image','category_id','created_at','updated_at','change','sureChange'
     ];
 
     //查询同一产品的多语言信息
@@ -28,5 +28,8 @@ class Product extends Model
     {
         return $this->hasOne('App\Category','id','category_id');
     }
-
+    public function getLog()
+    {
+        return $this->hasOne('App\Product_log','model','model');
+    }
 }

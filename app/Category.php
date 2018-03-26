@@ -7,17 +7,22 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     protected $table = 'categorys';
-    public function childCategory() {
-        return $this->hasMany('App\Category', 'parent_id', 'id');
-    }
-
-    public function allChildrenCategorys()
+    
+    public function findParent()
     {
-        return $this->childCategory()->with('allChildrenCategorys');
+        return $this->belongsTo('App\Category','parent_id','id');
     }
-
-    public function category_descriptions()
+    public function getChild()
     {
-        return $this->hasMany('App\Category_description','category_id','id');
+        return $this->hasMany('App\Category','parent_id','id');
+    }
+    
+    public function getProduct()
+    {
+        return $this->hasMany('App\Product_description','path','path');
+    }
+    public function getLan()
+    {
+        return $this->hasOne('App\Language','id','language_id');
     }
 }

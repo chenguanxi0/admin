@@ -4,17 +4,23 @@
     <div class="col-lg-12 contentBox" id="detail">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3>添加评论</h3>
+                <h3>添加公共评论</h3>
             </div>
             @include('common.errors')
             <div class="panel-body">
 
-                <form action="/commits/add" method="post" class="form-horizontal">
+                <form action="/commits/addCommon" method="post" class="form-horizontal">
                     {{csrf_field()}}
+
                     <div class="form-group">
-                        <label for="model" class="col-sm-2 control-label">产品model:</label>
+                        <label for="brand_id" class="col-sm-2 control-label">品牌:</label>
                         <div class="col-sm-8">
-                            <input type="text" name="model" class="form-control" id="model" value="">
+                            <select class="form-control" name="brand_id">
+                                @foreach($brands as $brand)
+                                    <option value="{{$brand->id}}">{{$brand->name}}</option>
+                                @endforeach
+                            </select>
+
                         </div>
                     </div>
                     <div class="form-group">
@@ -51,24 +57,25 @@
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="content" class="col-sm-2 control-label">是否通用:</label>
-                        <div class="switch-box is-success col-sm-8">
-                            <input value="true" id="222"  name="is_common" class="switch-box-input" type="checkbox" checked="checked">
-                            <label  for="222" class="switch-box-slider"></label>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="add_time" class="col-sm-2 control-label">展示日期:</label>
+                        <label for="reply" class="col-sm-2 control-label">回复内容:</label>
                         <div class="col-sm-8">
-                            <input type="date" name="add_time" class="form-control" id="add_time" value="">
+                            <textarea name="reply" id="reply" class="form-control" rows="4"></textarea>
                         </div>
                     </div>
                     <div class="form-group" style="text-align: center">
                     <button type="submit" class="btn btn-success">添加</button>
                     </div>
                 </form>
-            
+
             </div>
         </div>
     </div>
+@endsection
+@section('foot-js')
+
+    @if(session('add'))
+        <script>
+            swal('','添加成功!','success')
+        </script>
+    @endif
 @endsection
