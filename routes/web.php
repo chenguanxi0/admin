@@ -67,6 +67,7 @@ Route::group(['prefix' => 'tool'], function (){
         $namepath = 'storage/common_demo.xls';
         return response()->download(str_replace('\\', '/', public_path()).'/'.$namepath);
     });
+    Route::any('optionsAdd','ToolController@optionsAdd');
 });
 
 //分类管理

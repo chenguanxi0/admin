@@ -103,7 +103,7 @@
                     <a data-toggle="collapse" data-parent="#side-menu"
                        href="#collapseFour"><i class="fa fa-cog  fa-fw"></i> 工具<span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level panel-collapse collapse" id="collapseFour">
-
+                        <li> <a href="/tool/optionsAdd">添加属性</a></li>
                         <li>
                             <a href="/tool/commit">评论</a>
                         </li>

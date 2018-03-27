@@ -6,7 +6,7 @@ use App\MyClass\timeDeal;
 use App\Brand;
 use App\Category;
 use App\Product;
-use App\Product_description;
+use Illuminate\Support\Facades\App;
 use App\Commit;
 use App\Language;
 use App\UploadLog;
@@ -183,5 +183,70 @@ class ToolController extends Controller
         $filename = str_replace('\\', '/', public_path()).'/storage/mk/2017032211095413531.jpg';
         Zipper::make('storage/zip/test.zip')->add($filename)->close();
         dd($filename);
+    }
+    public function optionsAdd(Request $request)
+    {
+        if ($request->method() == 'GET'){
+            return view('tool.optionsAdd');
+        }
+
+        if(!$request->hasFile('file')){
+            exit('上传文件为空！');
+        }
+        $file = $_FILES;
+        $excel_file_path = $file['file']['tmp_name'];
+        $excel = App::make('excel');//excel类
+        $excel->load($excel_file_path, function($reader) use( &$res ) {
+            $reader = $reader->getSheet(0);
+            $res = $reader->toArray();
+            unset($res[0]);//去除表头
+        });
+
+        $url = $request->web;
+        $optionName = $request->optionName;
+
+        //products_options  第一张表
+        $sql_1 = "INSERT INTO `products_options`(`products_options_id`, `products_options_name`) VALUES (0,'".$optionName."')";
+
+        //products_options_values  第二章张表
+        //products_options_values_to_products_options 第三张表
+        $optionValuesArrs = array();
+        $modelArrs = array();
+        foreach ($res as $k=>$v){
+            $modelArrs[$k]['model'] = $v[0];
+            $singleArrs = explode('|',$v[1]);
+            $modelArrs[$k]['option_value'] = $singleArrs;
+           foreach ($singleArrs as $kk=>$vv){
+               if (!in_array($vv,$optionValuesArrs)){
+                   array_push($optionValuesArrs,$vv);
+               }
+           }
+        }
+
+        $sql_2 = "INSERT INTO `products_options_values` (`products_options_values_id`, `products_options_values_name`, `products_options_values_sort_order`) VALUES (0,'--- please select ---',0)";
+        $sql_3 = "INSERT INTO `products_options_values_to_products_options` ( `products_options_id`, `products_options_values_id`) VALUES (0,0)";
+        for ($i=1;$i<=count($optionValuesArrs);$i++){
+            $sql_2 .= ",('".$i."',"."'".$optionValuesArrs[$i-1]."',"."'".$i."'".")";
+            $sql_3 .= ",(0,".$i.")";
+        }
+
+        $ch = curl_init();
+        /***在这里需要注意的是，要提交的数据不能是二维数组或者更高
+         *例如array('name'=>serialize(array('tank','zhang')),'sex'=>1,'birth'=>'20101010')
+         *例如array('name'=>array('tank','zhang'),'sex'=>1,'birth'=>'20101010')这样会报错的*/
+        $data = array('sql_1' => $sql_1, 'sql_2' => $sql_2,'sql_3' => $sql_3,'modelArrs'=>json_encode($modelArrs),'optionValuesArrs'=>json_encode($optionValuesArrs));
+
+        curl_setopt($ch, CURLOPT_URL, $url.'/options.php');
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data));
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        if ($result){
+            return back();
+        }else{
+            return false;
+        }
+
     }
 }
