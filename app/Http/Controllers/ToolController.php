@@ -182,7 +182,7 @@ class ToolController extends Controller
     {
         $filename = str_replace('\\', '/', public_path()).'/storage/mk/2017032211095413531.jpg';
         Zipper::make('storage/zip/test.zip')->add($filename)->close();
-        dd($filename);
+        
     }
     public function optionsAdd(Request $request)
     {
@@ -222,14 +222,12 @@ class ToolController extends Controller
                }
            }
         }
-
         $sql_2 = "INSERT INTO `products_options_values` (`products_options_values_id`,`language_id`, `products_options_values_name`, `products_options_values_sort_order`) VALUES (1,".$language.",'--- please select ---',1)";
         $sql_3 = "INSERT INTO `products_options_values_to_products_options` ( `products_options_id`, `products_options_values_id`) VALUES (0,0)";
         for ($i=1;$i<=count($optionValuesArrs);$i++){
             $sql_2 .= ",('".($i+1)."',".$language.",'".$optionValuesArrs[$i-1]."',"."'".($i+1)."'".")";
             $sql_3 .= ",(0,".$i.")";
         }
-
         $ch = curl_init();
         /***在这里需要注意的是，要提交的数据不能是二维数组或者更高
          *例如array('name'=>serialize(array('tank','zhang')),'sex'=>1,'birth'=>'20101010')
