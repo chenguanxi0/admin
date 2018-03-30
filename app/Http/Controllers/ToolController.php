@@ -204,7 +204,7 @@ class ToolController extends Controller
 
         $url = $request->web;
         $optionName = $request->optionName;
-
+        $language = $request->language;
         //products_options  第一张表
         $sql_1 = "INSERT INTO `products_options`(`products_options_id`, `products_options_name`) VALUES (0,'".$optionName."')";
 
@@ -223,10 +223,10 @@ class ToolController extends Controller
            }
         }
 
-        $sql_2 = "INSERT INTO `products_options_values` (`products_options_values_id`, `products_options_values_name`, `products_options_values_sort_order`) VALUES (0,'--- please select ---',0)";
+        $sql_2 = "INSERT INTO `products_options_values` (`products_options_values_id`,`language_id`, `products_options_values_name`, `products_options_values_sort_order`) VALUES (1,".$language.",'--- please select ---',1)";
         $sql_3 = "INSERT INTO `products_options_values_to_products_options` ( `products_options_id`, `products_options_values_id`) VALUES (0,0)";
         for ($i=1;$i<=count($optionValuesArrs);$i++){
-            $sql_2 .= ",('".$i."',"."'".$optionValuesArrs[$i-1]."',"."'".$i."'".")";
+            $sql_2 .= ",('".($i+1)."',".$language.",'".$optionValuesArrs[$i-1]."',"."'".($i+1)."'".")";
             $sql_3 .= ",(0,".$i.")";
         }
 
@@ -241,7 +241,7 @@ class ToolController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data));
         $result = curl_exec($ch);
         curl_close($ch);
-
+//        dd($result);
         if ($result){
             return back();
         }else{

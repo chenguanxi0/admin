@@ -26,6 +26,12 @@
                         </div>
                     </div>
                     <div class="form-group">
+                        <label for="language" class="col-sm-2 control-label">语言id:</label>
+                        <div class="col-sm-8">
+                            <input type="text" name="language" class="form-control" id="language" placeholder="英语一般为1,其他语言在数据库中查找">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="fileId1" class="col-sm-2 control-label">上传表格:</label>
                         <div class="col-sm-8">
                             <input id="fileId1" type="file" class="form-control" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" name="file"/>
