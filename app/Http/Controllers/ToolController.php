@@ -241,7 +241,6 @@ class ToolController extends Controller
         curl_setopt($ch, CURLOPT_POSTFIELDS,http_build_query($data));
         $result = curl_exec($ch);
         curl_close($ch);
-//        dd($result);
         if ($result){
             return back();
         }else{
