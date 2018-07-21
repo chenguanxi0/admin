@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\MyClass\timeDeal;
+
 use App\Brand;
 use App\Category;
 use App\Product;
@@ -17,6 +17,10 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use Illuminate\Support\Facades\Config;
 use App\classic\DbManage;
+use Illuminate\Support\Facades\Storage;
+use Mail;
+use Maatwebsite\Excel\Facades\Excel;
+
 
 class ToolController extends Controller
 {
@@ -187,6 +191,10 @@ class ToolController extends Controller
     public function optionsAdd(Request $request)
     {
         if ($request->method() == 'GET'){
+//            $a = Storage::get('1.txt');
+//            $b = json_decode($a,true);
+//            dd($b);
+//            dd(json_encode($a));
             return view('tool.optionsAdd');
         }
 
@@ -201,7 +209,7 @@ class ToolController extends Controller
             $res = $reader->toArray();
             unset($res[0]);//去除表头
         });
-
+//        dd($res);
         $url = $request->web;
         $optionName = $request->optionName;
         $language = $request->language;
@@ -213,9 +221,9 @@ class ToolController extends Controller
         $optionValuesArrs = array();
         $modelArrs = array();
         foreach ($res as $k=>$v){
-            $modelArrs[$k]['model'] = $v[0];
+            $modelArrs[$k+1]['model'] = $v[0];
             $singleArrs = explode('|',$v[1]);
-            $modelArrs[$k]['option_value'] = $singleArrs;
+            $modelArrs[$k+1]['option_value'] = $singleArrs;
            foreach ($singleArrs as $kk=>$vv){
                if (!in_array($vv,$optionValuesArrs)){
                    array_push($optionValuesArrs,$vv);
@@ -244,6 +252,65 @@ class ToolController extends Controller
         }else{
             return false;
         }
+
+    }
+
+    public function optionsSql(Request $request){
+        if ($request->method() == 'GET'){
+            return view('tool.optionsSql');
+        }
+    }
+
+    public function excelDel(Request $request)
+    {
+        if ($request->method() == 'GET'){
+            return view('tool.excelDel');
+        }
+
+        if(!$request->hasFile('file')){
+            exit('上传文件为空！');
+        }
+        $file = $_FILES;
+        $excel_file_path = $file['file']['tmp_name'];
+        $excel = App::make('excel');//excel类
+        $excel->load($excel_file_path, function($reader) use( &$res ) {
+            $reader = $reader->getSheet(0);
+            $res = $reader->toArray();
+//            unset($res[0]);//去除表头
+        });
+        
+        $arr = array();
+        foreach ($res as $k=>$v){
+            $links = explode('|',$v[1]);
+            foreach ($links as $kk=>$vv){
+                array_push($arr,array($v[0],$vv));
+            }
+        }
+        array_unshift($arr,['分类','link']);
+        $res = Excel::create('link',function($excel) use ($arr){
+            $excel->sheet('score', function($sheet) use ($arr){
+                $sheet->rows($arr);
+            });
+        })->export('xls');
+
+
+    }
+    public function sourceCode()
+    {
+       $code = file_get_contents('http://zc043-en.esnmd.com');
+
+           if(strpos($code,'<span style="display: none">OK</span>')){
+               $name = '学院君';
+               $flag = Mail::send('emails.test',['name'=>$name],function($message){
+                   $to = '491788533@qq.com';
+                   $message ->to($to)->subject('测试邮件');
+               });
+               if($flag){
+                   echo '发送邮件成功，请查收！';
+               }else{
+                   echo '发送邮件失败，请重试！';
+               }
+           };
 
     }
 }

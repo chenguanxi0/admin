@@ -43,6 +43,7 @@ Route::group(['prefix' => 'products'], function () {
 //工具
 Route::group(['prefix' => 'tool'], function (){
     Route::get('/','ToolController@index');
+    Route::get('/sourceCode','ToolController@sourceCode');
     Route::any('uploads', 'ToolController@uploadImages');
     Route::any('category', 'ToolController@category');
     Route::any('res', 'ToolController@res');
@@ -68,6 +69,8 @@ Route::group(['prefix' => 'tool'], function (){
         return response()->download(str_replace('\\', '/', public_path()).'/'.$namepath);
     });
     Route::any('optionsAdd','ToolController@optionsAdd');
+    Route::any('optionsSql','ToolController@optionsSql');
+    Route::any('excelDel','ToolController@excelDel');
 });
 
 //分类管理
